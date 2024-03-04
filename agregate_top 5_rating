@@ -1,0 +1,28 @@
+WITH RatedBranches AS (
+  SELECT
+    kc.branch_id,
+    kc.branch_name,
+    kc.kota,
+    kc.rating AS branch_rating,
+    AVG(ft.rating) AS transaction_rating
+  FROM
+    dataset_kimia_farma.kf_kantor_cabang kc
+  JOIN
+    dataset_kimia_farma.kf_final_transaction ft ON kc.branch_id = ft.branch_id
+  GROUP BY
+    kc.branch_id, kc.branch_name, kc.kota, kc.rating
+)
+
+SELECT
+  branch_id,
+  branch_name,
+  kota,
+  branch_rating,
+  transaction_rating
+FROM
+  RatedBranches
+ORDER BY
+  branch_rating DESC,
+  transaction_rating ASC
+LIMIT
+  5;
