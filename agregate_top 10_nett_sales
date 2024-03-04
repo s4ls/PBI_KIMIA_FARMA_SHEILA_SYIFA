@@ -1,0 +1,22 @@
+SELECT
+  kc.branch_id,
+  kc.branch_name,
+  kc.kota,
+  kc.provinsi,
+  SUM(p.price * (1 - t.discount_percentage)) AS total_nett_sales
+FROM
+  dataset_kimia_farma.kf_final_transaction t
+JOIN
+  dataset_kimia_farma.kf_product p ON t.product_id = p.product_id
+JOIN
+  dataset_kimia_farma.kf_kantor_cabang kc ON t.branch_id = kc.branch_id
+GROUP BY
+  kc.branch_id,
+  kc.branch_name,
+  kc.kota,
+  kc.provinsi
+ORDER BY
+  total_nett_sales DESC
+LIMIT
+  10;
+
