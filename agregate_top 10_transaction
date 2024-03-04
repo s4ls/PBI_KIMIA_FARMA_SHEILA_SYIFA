@@ -1,0 +1,30 @@
+WITH ranked_transactions AS (
+  SELECT
+    kc.branch_id,
+    kc.branch_name,
+    kc.kota,
+    kc.provinsi,
+    COUNT(t.transaction_id) AS total_transactions,
+    RANK() OVER (PARTITION BY kc.branch_id, kc.provinsi ORDER BY COUNT(t.transaction_id) DESC) AS transaction_rank
+  FROM
+    dataset_kimia_farma.kf_final_transaction t
+  JOIN
+    dataset_kimia_farma.kf_kantor_cabang kc ON t.branch_id = kc.branch_id
+  GROUP BY
+    kc.branch_id,
+    kc.branch_name,
+    kc.kota,
+    kc.provinsi
+)
+
+SELECT
+  branch_id,
+  branch_name,
+  kota,
+  provinsi,
+  total_transactions
+FROM
+  ranked_transactions
+WHERE
+  transaction_rank <= 10;
+
