@@ -1,0 +1,10 @@
+SELECT
+  provinsi,
+  SUM(nett_profit) AS total_profit
+FROM
+  dataset_kimia_farma.kf_analisa1
+GROUP BY
+  provinsi
+ORDER BY
+  total_profit DESC;
+
